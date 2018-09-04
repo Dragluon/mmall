@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.awt.*;
+import java.util.List;
 import java.util.Set;
 
 @Service("iCategoryService")
@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements ICategoryService {
         if(rowCount > 0){
             return ServerResponse.createBySuccess("更新品类名字成功");
         }
-        return ServerResponse.createByErrorCodeMessage("更新品类名字失败");
+        return ServerResponse.createByErrorMessage("更新品类名字失败");
     }
 
     public ServerResponse<List<Category>> getChildrenParallelCategory(Integer categoryId){
@@ -64,7 +64,12 @@ public class CategoryServiceImpl implements ICategoryService {
         return ServerResponse.createBySuccess(categoryList);
     }
 
-    public ServerResponse selectCategoryAndChildrenById(Integer categoryId){
+    /**
+     * 递归查询本节点的id及孩子节点的id
+     * @param categoryId
+     * @return
+     */
+    public ServerResponse<List<Integer>> selectCategoryAndChildrenById(Integer categoryId){
         Set<Category> categorySet = Sets.newHashSet();
         findChildCategory(categorySet, categoryId);
 
